@@ -18,9 +18,11 @@ func NewSalaryService(repository Repository) *SalaryService {
 
 type Repository interface {
 	AddSalary(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error)
+	BulkAddSalaries(ctx context.Context, employee_salaries []entity.CreateEmployeeSalary) ([]entity.EmployeeSalary, error)
 	GetAllSalary(ctx context.Context) ([]entity.EmployeeSalary, error)
 	UpdateSalary(ctx context.Context, id string, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error)
 	DeleteSalary(ctx context.Context, id string, employee_salary entity.EmployeeSalary) error
+	BulkDeleteSalaries(ctx context.Context, employee_salary_ids entity.BulkDeleteSalaries) error
 }
 
 func (s *SalaryService) AddSalaryService(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error) {
@@ -30,6 +32,16 @@ func (s *SalaryService) AddSalaryService(ctx context.Context, employee_salary en
 		log.Println("Error service function:", err)
 	}
 	return res, nil
+}
+
+func (s *SalaryService) BulkAddSalaryService(ctx context.Context, employee_salaries []entity.CreateEmployeeSalary) ([]entity.EmployeeSalary, error) {
+
+	insertedSalaries, err := s.repository.BulkAddSalaries(ctx, employee_salaries)
+	if err != nil {
+		log.Panicln("Error service function:", err)
+	}
+
+	return insertedSalaries, nil
 }
 
 func (s *SalaryService) GetAllSalaryService(ctx context.Context) ([]entity.EmployeeSalary, error) {
@@ -52,6 +64,15 @@ func (s *SalaryService) UpdateSalaryService(ctx context.Context, employee_salary
 
 func (s *SalaryService) DeleteSalaryService(ctx context.Context, id string, employee_salary entity.EmployeeSalary) error {
 	err := s.repository.DeleteSalary(ctx, id, employee_salary)
+	if err != nil {
+		log.Println("Error service function:", err)
+	}
+	return nil
+}
+
+func (s *SalaryService) BulkDeleteSalaryService(ctx context.Context, employee_salary_ids entity.BulkDeleteSalaries) error {
+
+	err := s.repository.BulkDeleteSalaries(ctx, employee_salary_ids)
 	if err != nil {
 		log.Println("Error service function:", err)
 	}

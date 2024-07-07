@@ -12,3 +12,11 @@ type CreateEmployeeSalary struct {
 	Joining_Date  string `json:"joining_date"`
 	Project       string `json:"project"`
 }
+
+type BulkCreateEmployeeSalary struct {
+	BulkSalaries []CreateEmployeeSalary `json:"employee_salaries"`
+}
+
+type BulkDeleteSalaries struct {
+	Ids []int64 `json:"ids"`
+}
