@@ -22,9 +22,14 @@ func NewSalaryRepo(db *sql.DB) *SalaryRepo {
 func (repo *SalaryRepo) AddSalary(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error) {
 	var resposne entity.EmployeeSalary
 
+	joining_date, err := time.Parse("2006-01-02", employee_salary.Joining_Date)
+	if err != nil {
+		log.Println("Error parsing joining date:", err)
+	}
+
 	qry := `INSERT INTO public.salary (salary_amount, joining_date, project) VALUES($1, $2, $3) RETURNING *`
 
-	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project).Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id)
+	err = repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, joining_date, employee_salary.Project).Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id)
 
 	return resposne, err
 }
@@ -45,7 +50,7 @@ func (repo *SalaryRepo) GetAllSalary(ctx context.Context) ([]entity.EmployeeSala
 	for rows.Next() {
 		var id int64
 		var salary_amount int
-		var joining_date time.Time
+		var joining_date string
 		var project string
 
 		err := rows.Scan(&id, &salary_amount, &joining_date, &project)
@@ -63,7 +68,7 @@ func (repo *SalaryRepo) UpdateSalary(ctx context.Context, id string, employee_sa
 
 	qry := `UPDATE public.salary SET salary_amount=$1, joining_date=$2, project=$3 WHERE id=$4 RETURNING *`
 
-	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project).Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id)
+	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project, id).Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id)
 
 	if err != nil {
 		log.Println("Error updating employee:", err)
