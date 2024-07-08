@@ -28,10 +28,14 @@ func (repo *SalaryRepo) AddSalary(ctx context.Context, employee_salary entity.Cr
 	// 	log.Println("Error parsing joining date:", err)
 	// }
 
-	qry := `INSERT INTO public.salary (salary_amount, joining_date, project) VALUES($1, $2, $3) RETURNING *`
+	fmt.Println(employee_salary)
 
-	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project).
-		Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id)
+	qry := `INSERT INTO public.salary (salary_amount, joining_date, project, employee_id) VALUES($1, $2, $3, $4) RETURNING *`
+
+	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project, employee_salary.Employee_Id).
+		Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id, &resposne.Employee_Id)
+
+		fmt.Println(err)
 
 	return resposne, err
 }
@@ -157,17 +161,17 @@ func (repo *SalaryRepo) BulkDeleteSalaries(ctx context.Context, employee_salary_
 
 	// need to perform conversion for pq.Array
 	// Convert []int64 to []interface{} for pq.Array
-    ids := make([]interface{}, len(employee_salary_ids.Ids))
-    for i, id := range employee_salary_ids.Ids {
-        ids[i] = id
-    }
+	ids := make([]interface{}, len(employee_salary_ids.Ids))
+	for i, id := range employee_salary_ids.Ids {
+		ids[i] = id
+	}
 
-    // Execute the delete statement with pq.Array for array literal
-    _, err = stmt.ExecContext(ctx, pq.Array(ids))
-    if err != nil {
-        log.Println("Error executing delete statement:", err)
-        return err
-    }
+	// Execute the delete statement with pq.Array for array literal
+	_, err = stmt.ExecContext(ctx, pq.Array(ids))
+	if err != nil {
+		log.Println("Error executing delete statement:", err)
+		return err
+	}
 
-    return nil
+	return nil
 }

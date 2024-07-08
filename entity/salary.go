@@ -5,12 +5,14 @@ type EmployeeSalary struct {
 	Salary_Amount int    `json:"salary_amount"`
 	Joining_Date  string `json:"joining_date"`
 	Project       string `json:"project"`
+	Employee_Id   int32  `json:"employee_id"`
 }
 
 type CreateEmployeeSalary struct {
 	Salary_Amount int    `json:"salary_amount"`
 	Joining_Date  string `json:"joining_date"`
 	Project       string `json:"project"`
+	Employee_Id   int32  `json:"employee_id"`
 }
 
 type BulkCreateEmployeeSalary struct {

@@ -8,12 +8,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+var SalaryService service.SalaryService
+
 func SetUpRouter(e *echo.Echo, db *sql.DB) {
 
 	salaryRepo := repository.NewSalaryRepo(db)
 	salaryService := service.NewSalaryService(salaryRepo)
 	salaryHandler := NewSalaryHandler(salaryService)
-
 
 	salaryGroup := e.Group("/employee/salary")
 

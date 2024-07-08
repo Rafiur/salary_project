@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"salary_project/entity"
 )
@@ -26,11 +27,14 @@ type Repository interface {
 }
 
 func (s *SalaryService) AddSalaryService(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error) {
+	//fmt.Println("FFFFFFFFFFFFFFFFFFFF")
 
+	fmt.Println(employee_salary)
 	res, err := s.repository.AddSalary(ctx, employee_salary)
 	if err != nil {
 		log.Println("Error service function:", err)
 	}
+	//fmt.Println("WWWWWWWWWWWWW")
 	return res, nil
 }
 
