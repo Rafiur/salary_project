@@ -22,6 +22,7 @@ type Repository interface {
 	BulkAddSalaries(ctx context.Context, employee_salaries []entity.CreateEmployeeSalary) ([]entity.EmployeeSalary, error)
 	GetAllSalary(ctx context.Context) ([]entity.EmployeeSalary, error)
 	UpdateSalary(ctx context.Context, id string, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error)
+	UpdateSalaryByEmployeeId(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error)
 	DeleteSalary(ctx context.Context, id string, employee_salary entity.EmployeeSalary) error
 	BulkDeleteSalaries(ctx context.Context, employee_salary_ids entity.BulkDeleteSalaries) error
 }
@@ -29,7 +30,6 @@ type Repository interface {
 func (s *SalaryService) AddSalaryService(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error) {
 	//fmt.Println("FFFFFFFFFFFFFFFFFFFF")
 
-	fmt.Println(employee_salary)
 	res, err := s.repository.AddSalary(ctx, employee_salary)
 	if err != nil {
 		log.Println("Error service function:", err)
@@ -60,6 +60,20 @@ func (s *SalaryService) GetAllSalaryService(ctx context.Context) ([]entity.Emplo
 func (s *SalaryService) UpdateSalaryService(ctx context.Context, employee_salary entity.CreateEmployeeSalary, id string) (entity.EmployeeSalary, error) {
 
 	res, err := s.repository.UpdateSalary(ctx, id, employee_salary)
+	if err != nil {
+		log.Println("Error service function:", err)
+	}
+	return res, nil
+}
+
+func (s *SalaryService) UpdateSalaryByIdService(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error) {
+
+	//fmt.Println("Printing service employee salary:",employee_salary)
+
+	res, err := s.repository.UpdateSalaryByEmployeeId(ctx, employee_salary)
+
+	fmt.Println(res)
+
 	if err != nil {
 		log.Println("Error service function:", err)
 	}

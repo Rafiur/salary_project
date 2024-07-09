@@ -6,6 +6,9 @@ package proto;
 
 service EmployeeToSalary {
     rpc CreateSalary(CreateSalaryRequest)returns(CreateSalaryResponse){}
+    rpc GetAllSalary(GetAllSalaryRequest)returns(GetAllSalaryResponse){}
+    rpc UpdateSalary(UpdateSalaryRequest)returns(UpdateSalaryResponse){}
+    rpc DeleteSalary(DeleteSalaryRequest)returns(DeleteSalaryResposne){}
 }
 
 message CreateSalaryRequest{
@@ -16,6 +19,46 @@ message CreateSalaryRequest{
 }
 
 message CreateSalaryResponse{
+    bool status =1;
+    string message=2;
+}
+
+message GetAllSalaryRequest{
+    int32 employee_id =1;
+    int32 salary_amount = 2;
+    string project =3;
+    string joining_date=4;
+}
+
+message GetAllSalaryResponse{
+    int32 employee_id =1;
+    int32 salary_amount = 2;
+    string project =3;
+    string joining_date=4;
+}
+
+message UpdateSalaryRequest{
+    int32 employee_id = 1;
+    int32 salary_amount = 2;
+    string project =3;
+    string joining_date=4;
+}
+
+message UpdateSalaryResponse{
+    int32 employee_id =1;
+    int32 salary_amount = 2;
+    string project =3;
+    string joining_date=4;
+}
+
+message DeleteSalaryRequest{
+    int32 employee_id =1;
+    int32 salary_amount =2;
+    string project =3;
+    string joining_date=4;
+}
+
+message DeleteSalaryResposne{
     bool status =1;
     string message=2;
 }

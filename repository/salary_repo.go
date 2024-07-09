@@ -35,7 +35,7 @@ func (repo *SalaryRepo) AddSalary(ctx context.Context, employee_salary entity.Cr
 	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project, employee_salary.Employee_Id).
 		Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id, &resposne.Employee_Id)
 
-		fmt.Println(err)
+	fmt.Println(err)
 
 	return resposne, err
 }
@@ -118,11 +118,29 @@ func (repo *SalaryRepo) UpdateSalary(ctx context.Context, id string, employee_sa
 
 	qry := `UPDATE public.salary SET salary_amount=$1, joining_date=$2, project=$3 WHERE id=$4 RETURNING *`
 
-	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project, id).Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id)
+	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project, id).
+		Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id, &resposne.Employee_Id)
 
 	if err != nil {
 		log.Println("Error updating salary:", err)
 	}
+	return resposne, err
+}
+
+func (repo *SalaryRepo) UpdateSalaryByEmployeeId(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error) {
+	var resposne entity.EmployeeSalary
+
+	//fmt.Println("Printing employee salary from repo:", employee_salary)
+
+	qry := `UPDATE public.salary SET salary_amount=$1, joining_date=$2, project=$3 WHERE employee_id=$4 RETURNING *`
+
+	err := repo.db.QueryRowContext(ctx, qry, employee_salary.Salary_Amount, employee_salary.Joining_Date, employee_salary.Project, employee_salary.Employee_Id).
+		Scan(&resposne.Salary_Amount, &resposne.Joining_Date, &resposne.Project, &resposne.Id, &resposne.Employee_Id)
+
+	if err != nil {
+		log.Println("Error updating salary:", err)
+	}
+	//fmt.Println("Printing response:", resposne)
 	return resposne, err
 }
 
