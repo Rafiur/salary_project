@@ -39,6 +39,25 @@ func (s *SalaryGrpcHandler) CreateSalary(ctx context.Context, in *proto.CreateSa
 	return resp, nil
 }
 
+func (s *SalaryGrpcHandler) GetAllSalary(ctx context.Context, in *proto.GetAllSalaryRequest) (*proto.GetAllSalaryResponse, error) {
+	employee_salaries, err := s.SalaryService.GetAllSalaryService(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var grpcSalaries []*proto.EmployeeSalary
+	for _, salary := range employee_salaries {
+		grpcSalaries = append(grpcSalaries, &proto.EmployeeSalary{
+			EmployeeId:   int32(salary.Employee_Id),
+			SalaryAmount: int32(salary.Salary_Amount),
+			Project:      salary.Project,
+			JoiningDate:  salary.Joining_Date,
+		})
+	}
+	fmt.Println(grpcSalaries)
+	return &proto.GetAllSalaryResponse{Salaries: grpcSalaries}, nil
+
+}
+
 func (s *SalaryGrpcHandler) UpdateSalary(ctx context.Context, in *proto.UpdateSalaryRequest) (*proto.UpdateSalaryResponse, error) {
 
 	//fmt.Println("printing in:",in)

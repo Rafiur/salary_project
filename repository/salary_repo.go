@@ -110,6 +110,37 @@ func (repo *SalaryRepo) GetAllSalary(ctx context.Context) ([]entity.EmployeeSala
 		employee_salary := entity.EmployeeSalary{Id: id, Salary_Amount: salary_amount, Joining_Date: joining_date, Project: project}
 		employee_salaries = append(employee_salaries, employee_salary)
 	}
+	
+	return employee_salaries, err
+}
+
+func (repo *SalaryRepo) GetAllSalaryWithEmployee(ctx context.Context) ([]entity.EmployeeSalary, error) {
+	qry := `SELECT id, salary_amount, joining_date, project FROM public.salary WHERE employee_id IS NOT NULL`
+
+	rows, err := repo.db.QueryContext(ctx, qry)
+
+	if err != nil {
+		log.Println("Error querying database:", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	employee_salaries := []entity.EmployeeSalary{}
+
+	for rows.Next() {
+		var id int64
+		var salary_amount int
+		var joining_date string
+		var project string
+
+		err := rows.Scan(&id, &salary_amount, &joining_date, &project)
+		if err != nil {
+			log.Println("Error scanning row:", err)
+		}
+		employee_salary := entity.EmployeeSalary{Id: id, Salary_Amount: salary_amount, Joining_Date: joining_date, Project: project}
+		employee_salaries = append(employee_salaries, employee_salary)
+	}
+	
 	return employee_salaries, err
 }
 

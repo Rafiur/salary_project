@@ -21,6 +21,7 @@ type Repository interface {
 	AddSalary(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error)
 	BulkAddSalaries(ctx context.Context, employee_salaries []entity.CreateEmployeeSalary) ([]entity.EmployeeSalary, error)
 	GetAllSalary(ctx context.Context) ([]entity.EmployeeSalary, error)
+	GetAllSalaryWithEmployee(ctx context.Context) ([]entity.EmployeeSalary, error)
 	UpdateSalary(ctx context.Context, id string, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error)
 	UpdateSalaryByEmployeeId(ctx context.Context, employee_salary entity.CreateEmployeeSalary) (entity.EmployeeSalary, error)
 	DeleteSalary(ctx context.Context, id string, employee_salary entity.EmployeeSalary) error
@@ -49,7 +50,7 @@ func (s *SalaryService) BulkAddSalaryService(ctx context.Context, employee_salar
 }
 
 func (s *SalaryService) GetAllSalaryService(ctx context.Context) ([]entity.EmployeeSalary, error) {
-	employee_salaries, err := s.repository.GetAllSalary(ctx)
+	employee_salaries, err := s.repository.GetAllSalaryWithEmployee(ctx)
 	if err != nil {
 		log.Println("Error service function:", err)
 	}

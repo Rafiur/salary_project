@@ -24,17 +24,21 @@ message CreateSalaryResponse{
 }
 
 message GetAllSalaryRequest{
-    int32 employee_id =1;
-    int32 salary_amount = 2;
-    string project =3;
-    string joining_date=4;
+    
 }
 
 message GetAllSalaryResponse{
-    int32 employee_id =1;
+    
+    repeated EmployeeSalary salaries =1;
+}
+
+message EmployeeSalary{
+    int32 employee_id = 1;
     int32 salary_amount = 2;
-    string project =3;
-    string joining_date=4;
+    string project = 3;
+    string joining_date= 4;
+    string name = 5;
+    string email = 6;
 }
 
 message UpdateSalaryRequest{
